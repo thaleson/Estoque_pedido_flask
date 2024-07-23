@@ -3,6 +3,8 @@ venv/
 *.egg-info/
 __pycache__/
 
+
+venv
 # Arquivos de configuração do IDE
 .idea/
 .vscode/
