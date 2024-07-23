@@ -1,0 +1,31 @@
+# Ambiente Virtual
+venv/
+*.egg-info/
+__pycache__/
+
+# Arquivos de configuração do IDE
+.idea/
+.vscode/
+
+# Arquivos de configuração do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de configuração do ambiente
+.env
+*.sqlite3
+
+# Logs e outros arquivos temporários
+*.log
+*.tmp
+*.bak
+
+# Build e arquivos de cache
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos específicos para ignorar
+categoriasdb.py
+secretkey.py
+teste.py

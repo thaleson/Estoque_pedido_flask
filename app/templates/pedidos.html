@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Pedidos{% endblock %}
+{% block content %}
+    <h1 class="page-title">Pedidos</h1>
+    <table class="table table-hover mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Itens</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ order.client }}</td>
+                <td>
+                    {% if order.status == 'Cancelado' %}
+                        <span class="badge badge-danger">Cancelado</span>
+                    {% elif order.status == 'Pendente' %}
+                        <span class="badge badge-warning">Pendente</span>
+                    {% elif order.status == 'Concluído' %}
+                        <span class="badge badge-success">Concluído</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Desconhecido</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <ul>
+                        {% for item in order.items %}
+                        <li>{{ item.product.name }} - Quantidade: {{ item.amount }} - Preço: R$ {{ item.unit_price }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <form action="{{ url_for('delete_order', order_id=order.id) }}" method="POST" style="display:inline;">
+                        {{ delete_form.hidden_tag() }}
+                        {{ delete_form.submit(class="btn btn-danger btn-sm") }}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Voltar</a>
+{% endblock %}

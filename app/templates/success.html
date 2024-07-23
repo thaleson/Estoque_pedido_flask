@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Sucesso{% endblock %}
+{% block content %}
+    <div class="success-page">
+        <h1>Produto Adicionado com Sucesso!</h1>
+        <p>O produto foi adicionado ao estoque com sucesso. Você pode voltar para a página inicial ou adicionar outro produto.</p>
+        <a class="btn btn-primary" href="{{ url_for('index') }}">Voltar para a Página Inicial</a>
+        <a class="btn btn-primary" href="{{ url_for('add_product') }}">Adicionar Outro Produto</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block content %}
+    <h1>{{ category.name }}</h1>
+    
+    {% if products %}
+        <ul class="list-group mt-3">
+            {% for product in products %}
+            <li class="list-group-item">
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.description }}</p>
+                <p>Preço: R$ {{ product.price }}</p>
+                <p>Quantidade em estoque: {{ product.quantity_in_stock }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info mt-3" role="alert">
+            <h4 class="alert-heading">Nenhum Produto Encontrado!</h4>
+            <p>Atualmente, não há produtos disponíveis nesta categoria. Por favor, volte mais tarde ou selecione outra categoria.</p>
+            <hr>
+            <p class="mb-0">
+                <a class="btn btn-primary" href="{{ url_for('index') }}">Voltar para a Página Inicial</a>
+            </p>
+        </div>
+    {% endif %}
+    
+{% endblock %}

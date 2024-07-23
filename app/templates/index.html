@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Página Inicial{% endblock %}
+{% block content %}
+    <h1 class="page-title">Produtos</h1>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card product-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text price">Preço: R$ {{ product.price }}</p>
+                    <p class="card-text stock">Quantidade em Estoque: {{ product.quantity_in_stock }}</p>
+
+                    <a class="btn btn-danger" href="{{ url_for('delete_product', product_id=product.id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ product.id }}').submit();">Remover</a>
+                    <form id="delete-form-{{ product.id }}" action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" style="display: none;">
+                        <input type="hidden" name="_method" value="POST">
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
