@@ -6,12 +6,23 @@ from datetime import datetime
 
 @app.route('/')
 def index():
+    """
+    Renderiza a página inicial com a lista de produtos disponíveis.
+
+    :return: Renderiza o template 'index.html' com a lista de produtos.
+    """
     products = Product.query.all()
     return render_template('index.html', products=products)
 
 
 @app.route('/categories')
 def categories():
+    """
+    Renderiza a página de categorias com a lista de categorias disponíveis.
+
+    :return: Renderiza o template 'categorias.html' com a lista de categorias.
+    :raises Exception: Caso ocorra um erro ao carregar categorias.
+    """
     try:
         categories = Category.query.all()
         return render_template('categorias.html', categories=categories)
@@ -21,6 +32,13 @@ def categories():
 
 @app.route('/category/<int:category_id>')
 def category(category_id):
+    """
+    Renderiza a página de produtos de uma categoria específica.
+
+    :param category_id: ID da categoria cujos produtos devem ser exibidos.
+    :return: Renderiza o template 'category_products.html' com a categoria e os produtos relacionados.
+    :raises Exception: Caso ocorra um erro ao carregar a categoria ou os produtos.
+    """
     try:
         category = Category.query.get_or_404(category_id)
         products = Product.query.filter_by(category_id=category_id).all()
@@ -31,8 +49,14 @@ def category(category_id):
 
 @app.route('/orders', methods=['GET', 'POST'])
 def orders():
+    """
+    Renderiza a página de pedidos com a lista de pedidos existentes e um formulário para deletar pedidos.
+
+    :return: Renderiza o template 'pedidos.html' com a lista de pedidos e o formulário de exclusão.
+    """
     orders = Order.query.all()
-    delete_form = DeleteOrderForm()  # Cria uma instância do formulário
+    delete_form = DeleteOrderForm()  # Cria uma instância do formulário de exclusão
+
     if request.method == 'POST':
         if delete_form.validate_on_submit():
             order_id = request.form.get('order_id')
@@ -46,6 +70,11 @@ def orders():
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
+    """
+    Adiciona um novo produto e cria um pedido (se informações do pedido forem fornecidas).
+
+    :return: Renderiza o template 'add_product.html' com categorias e produtos, ou redireciona para a página inicial após a adição.
+    """
     if request.method == 'POST':
         # Adicionar produto
         name = request.form['name']
@@ -82,67 +111,51 @@ def add_product():
 
 @app.route('/delete_product/<int:product_id>', methods=['POST'])
 def delete_product(product_id):
+    """
+    Remove um produto do banco de dados e suas referências em itens de pedidos.
+
+    :param product_id: ID do produto a ser removido.
+    :return: Redireciona para a página inicial ou exibe uma mensagem de erro.
+    """
     product = Product.query.get(product_id)
     if product:
-        # Antes de remover o produto, remova ou atualize as referências
-        ordered_items = OrderedItem.query.filter_by(product_id=product_id).all()
-        for item in ordered_items:
-            db.session.delete(item)  # ou ajuste conforme necessário
-
-        db.session.delete(product)
-        db.session.commit()
-        flash('Produto removido com sucesso!', 'success')
-    else:
-        flash('Produto não encontrado.', 'error')
-        return redirect(url_for('index'))
-
-    product = Product.query.get(product_id)
-    if product:
-        db.session.delete(product)
-        db.session.commit()
-        flash('Produto removido com sucesso!', 'success')
-    else:
-        flash('Produto não encontrado.', 'error')
-        return redirect(url_for('index'))
-
-    product = Product.query.get(product_id)
-    if product:
-        # Remover item das ordens (opcional)
+        # Remover itens relacionados ao produto
         OrderedItem.query.filter_by(product_id=product_id).delete()
-        # Remover o produto
         db.session.delete(product)
         db.session.commit()
         flash('Produto removido com sucesso!', 'success')
     else:
         flash('Produto não encontrado.', 'error')
-        return redirect(url_for('index'))
 
-    try:
-        product = Product.query.get_or_404(product_id)
-        db.session.delete(product)
-        db.session.commit()
-        return redirect(url_for('index'))
-    except Exception as e:
-        return f"Erro ao remover o produto: {e}", 500
-
+    return redirect(url_for('index'))
 
 @app.route('/delete_order/<int:order_id>', methods=['POST'])
 def delete_order(order_id):
+    """
+    Remove um pedido do banco de dados.
+
+    :param order_id: ID do pedido a ser removido.
+    :return: Redireciona para a página de pedidos.
+    """
     order = Order.query.get(order_id)
     if order:
         db.session.delete(order)
         db.session.commit()
-    return redirect(url_for('pedidos'))
+        flash('Pedido removido com sucesso!', 'success')
+    else:
+        flash('Pedido não encontrado.', 'error')
 
+    return redirect(url_for('orders'))
 
-
-def requests():
-    orders = Order.query.all()
-    delete_form = DeleteOrderForm()
-    return render_template('pedidos.html', orders=orders, delete_form=delete_form)
 
 @app.route('/create_order', methods=['POST'])
 def create_order():
+    """
+    Cria um novo pedido com os detalhes fornecidos e adiciona itens ao pedido.
+
+    :return: Redireciona para a página de pedidos ou exibe uma mensagem de erro.
+    :raises Exception: Caso ocorra um erro ao criar o pedido ou adicionar itens.
+    """
     try:
         client = request.form['client']
         status = request.form['status']
