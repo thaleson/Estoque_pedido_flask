@@ -323,6 +323,35 @@ body::before {
     border-color: #004085;
 }
 
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1080;
+    width: 300px; /* Largura dos toasts */
+}
+
+.toast {
+    background-color: #f8f9fa; /* Cor de fundo do toast */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Borda do toast */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra do toast */
+}
+
+.toast-header {
+    background-color: #343a40; /* Cor de fundo do cabeçalho do toast */
+    color: white; /* Cor do texto do cabeçalho do toast */
+    font-weight: bold; /* Negrito no cabeçalho do toast */
+}
+
+.toast-body {
+    font-size: 1.2em; /* Aumenta o tamanho do texto no corpo do toast */
+}
+
+.close {
+    color: white; /* Cor do botão de fechar */
+}
+
+
 /* Responsividade */
 @media (max-width: 768px) {
     .form-container {

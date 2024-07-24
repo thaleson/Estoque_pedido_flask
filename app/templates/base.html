@@ -6,12 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
-
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  
-
-
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -23,8 +18,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('categories') }}">Categorias</a>
-
-
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('orders') }}">Pedidos</a>
@@ -38,8 +31,34 @@
     <div class="container mt-5">
         {% block content %}{% endblock %}
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="toast-container">
+                {% for category, message in messages %}
+                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                        <div class="toast-header">
+                            <strong class="mr-auto">{{ category|capitalize }}</strong>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.toast').toast('show');
+        });
+    </script>
 </body>
 </html>

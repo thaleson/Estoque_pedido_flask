@@ -14,7 +14,7 @@
 
                     <a class="btn btn-danger" href="{{ url_for('delete_product', product_id=product.id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ product.id }}').submit();">Remover</a>
                     <form id="delete-form-{{ product.id }}" action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" style="display: none;">
-                        <input type="hidden" name="_method" value="POST">
+                        {{ delete_form.hidden_tag() }}
                     </form>
 
 
