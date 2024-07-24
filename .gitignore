@@ -6,6 +6,12 @@ __pycache__/
 venv/
 
 
+
+instance/
+
+instance
+site.db
+
 venv
 # Arquivos de configuração do IDE
 .idea/
